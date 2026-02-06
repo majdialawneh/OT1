@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة الطالب - OT Platform</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="app.js" defer></script>
+<script src="main.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-top">
+    <button id="darkToggle" class="dark-btn">🌙</button>
+    <button class="menu-btn" id="menuBtn">☰</button>
+  </div>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">الرئيسية</a></li>
+    <li><a href="materials.html">المواد</a></li>
+    <li><a href="quizzes.html">الاختبارات</a></li>
+    <li><a href="dashboard.html">لوحة الطالب</a></li>
+    <li><a href="profile.html">الملف الشخصي</a></li>
+    <li><a href="about.html">عن المنصة</a></li>
+    <li><a href="contact.html">تواصل معنا</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+   
+    <!-- Auth Links -->
+<li id="loginLink"><a href="login.html">دخول</a></li>
+<li id="signupLink"><a href="signup.html">تسجيل</a></li>
+
+<!-- User Links -->
+<li id="userName" style="display:none;"></li>
+<li id="logoutLink" style="display:none;">
+  <a href="#" id="logoutBtn">تسجيل خروج</a>
+</li>
+
+  </ul>
+</nav>
+
+<!-- Main Dashboard -->
+<main class="page-bg dashboard-page">
+  <section class="dashboard">
+<h2>مرحباً <span id="studentName"></span> 👋</h2>
+<button id="logoutBtn">تسجيل خروج</button>
+    <p class="sub">تابع تقدمك الأكاديمي ومهامك العملية هنا 💪</p>
+
+    <div class="dashboard-grid">
+
+      <!-- المواد -->
+      <div class="card">
+        <h3>📚 المواد</h3>
+        <p>عدد المواد المسجلة</p>
+        <span>6</span>
+        <button class="btn-card">عرض المواد 🎯</button>
+        <p class="motivational">واصل التعلم وحقق أهدافك اليوم!</p>
+      </div>
+
+      <!-- الفيديوهات -->
+      <div class="card">
+        <h3>🎥 الفيديوهات</h3>
+        <p>الفيديوهات المكتملة</p>
+        <span>24</span>
+        <button class="btn-card">مشاهدة الفيديوهات ▶️</button>
+        <p class="motivational">كل فيديو يقربك من التميز 🌟</p>
+      </div>
+
+      <!-- الاختبارات -->
+      <div class="card">
+        <h3>📝 الاختبارات</h3>
+        <p>تم حلها</p>
+        <span>12</span>
+        <button class="btn-card">الذهاب للاختبارات 🏆</button>
+        <p class="motivational">كل اختبار يزيد مهارتك 💡</p>
+      </div>
+
+      <!-- التقدم -->
+      <div class="card progress-card">
+        <h3>⭐ التقدم</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 70%;"></div>
+        </div>
+        <span>70%</span>
+        <p class="motivational">أنت على الطريق الصحيح! 🚀</p>
+      </div>
+
+      <!-- آخر نشاط -->
+      <div class="card">
+        <h3>⏱ آخر نشاط</h3>
+        <p>اختبار ADL</p>
+        <p class="motivational">تابع نشاطك اليومي لتحافظ على مستواك 👍</p>
+      </div>
+
+    </div>
+
+    <!-- Charts Section -->
+    <section class="charts-section">
+      <h2>📊 أداء الاختبارات</h2>
+      <canvas id="testChart" width="400" height="200"></canvas>
+    </section>
+  </section>
+</main>
+
+<footer>© OT Platform</footer>
+
+<script>
+  // Dark Mode
+  const darkToggle = document.getElementById("darkToggle");
+  darkToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+  });
+
+  // Mobile Menu
+  const menuBtn = document.getElementById("menuBtn");
+  const navLinks = document.getElementById("navLinks");
+  menuBtn.addEventListener("click", () => {
+    navLinks.classList.toggle("active");
+  });
+
+  // Animate Progress Bars
+  document.addEventListener("DOMContentLoaded", () => {
+    const progressBars = document.querySelectorAll(".progress-bar");
+    progressBars.forEach(bar => {
+      let width = 0;
+      const target = parseInt(bar.style.width);
+      const interval = setInterval(() => {
+        if(width >= target) clearInterval(interval);
+        else {
+          width++;
+          bar.style.width = width + "%";
+        }
+      }, 15);
+    });
+  });
+
+  // Charts.js – Test Scores
+  const ctx = document.getElementById('testChart').getContext('2d');
+  const testChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: ['اختبار ADL', 'اختبار MMSE', 'اختبار Balance', 'اختبار Dexterity'],
+          datasets: [{
+              label: 'درجة الطالب',
+              data: [70, 85, 60, 90],
+              backgroundColor: [
+                  '#6366f1',
+                  '#22d3ee',
+                  '#facc15',
+                  '#10b981'
+              ],
+              borderRadius: 5,
+              barPercentage: 0.6
+          }]
+      },
+      options: {
+          responsive: true,
+          plugins: {
+              legend: { display: false },
+              tooltip: { enabled: true }
+          },
+          scales: {
+              y: { beginAtZero: true, max: 100 }
+          }
+      }
+  });
+</script>
+</body>
+</html>
+
+
+
